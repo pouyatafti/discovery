@@ -1,6 +1,6 @@
 # discovery
 
-small collection of Python utilities for inferring types of files and variables using regular expressions.  there is some support for localisation (for dates, numbers, and booleans), mainly with the help of [babel](babel.pocoo.org/en/latest/).
+small collection of Python utilities for inferring types of files and variables using regular expressions.  there is some support for localisation (for dates, numbers, and booleans), mainly with the help of [babel](https://babel.pocoo.org/en/latest/).
 
 ## status
 
