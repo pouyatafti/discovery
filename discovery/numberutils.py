@@ -29,4 +29,5 @@ class NumberRE(AnyRE):
 	def common_hex_formats(self):
 		return [
 			"%hex",
+			"0x%hex",
 		]
