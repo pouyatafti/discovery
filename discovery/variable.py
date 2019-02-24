@@ -4,7 +4,7 @@ from collections import namedtuple
 import re
 from babel import numbers
 
-from . import timeutils, numberutils, booleanutils
+from . import timeutils, numberutils, booleanutils, nullutils
 
 class Type(Enum):
 	DECIMAL = "decimal"
@@ -14,12 +14,13 @@ class Type(Enum):
 	TIME = "time"
 	DATETIME = "datetime"
 	STRING = "string"
+	NULL = "null"
 
 TypeVar = namedtuple("TypeVar", "type variant")
 
 def infer_format(sample, formats=None, ignorecase=True, tolerance=0.0, locale="en_US"):
 	if formats is None:
-		formats = common_formats("decimal", locale) + common_formats("hex", locale) + common_formats("bool", locale) + common_formats("date", locale) + common_formats("time", locale) + common_formats("datetime", locale) + common_formats("string", locale)
+		formats = common_formats("decimal", locale) + common_formats("hex", locale) + common_formats("bool", locale) + common_formats("date", locale) + common_formats("time", locale) + common_formats("datetime", locale) + common_formats("string", locale) + common_formats("null", locale)
 
 	re_options = (re.IGNORECASE,) if ignorecase else ()
 	comp_formats = [(f[0], re.compile(f[1], *re_options)) for f in formats]
@@ -63,6 +64,13 @@ def common_formats(cat, locale):
 		}[cat]
 
 		return [(TypeVar(Type(cat), f), pre.fmt2re(f)) for f in fmts]	
+	elif cat == "null":
+		pre = nullutils.NullRE(locale)
+		fmts = {
+			"null": pre.common_null_formats,
+		}[cat]
+
+		return [(TypeVar(Type(cat), f), pre.fmt2re(f)) for f in fmts]
 	elif cat == "string":
 		return [
 			(TypeVar(Type.STRING,""), "^(.*)$"),
